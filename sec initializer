@@ -1,0 +1,12 @@
+# region imports
+from AlgorithmImports import *
+
+class CustomSecurityInitializer(BrokerageModelSecurityInitializer):
+
+    def __init__(self, algorithm: QCAlgorithm) -> None:
+        security_seeder = FuncSecuritySeeder(lambda symbol: algorithm.History[TradeBar](symbol, 3, Resolution.Daily))
+        super().__init__(algorithm.BrokerageModel, security_seeder)
+
+    def Initialize(self, security: Security) -> None:
+        super().Initialize(security)
+        security.SetSlippageModel(VolumeShareSlippageModel())
